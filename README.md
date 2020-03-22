@@ -9,7 +9,7 @@ Small-scale projects to generate and analyse datasets, producing meaningful solu
 
 # Chaos Theory
 
-Using an iterative equation x<sub>n+1</sub> = rx<sub>n</sub>(1-(x<sub>n</sub>)^2), 
+Using an iterative equation x<sub>n+1</sub> = rx<sub>n</sub>(1-(x<sub>n</sub>)<super>2</super>), 
 
 
 # N-body
