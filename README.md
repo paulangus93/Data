@@ -9,7 +9,7 @@ Small-scale projects to generate and analyse datasets, producing meaningful solu
 
 # Chaos Theory
 
-This is primarily an exercise in data visualisation as conclusions may be drawn by fine tuning data plots and simply observing the system's properties. It may be possible in the future to increase accuracy via data mining.
+This is primarily an exercise in data visualisation as conclusions may be drawn by fine tuning data plots and simply observing the system's properties. Accuracy can be increased via data mining.
 
 Using the equation x<sub>n + 1</sub> = rx<sub>n</sub>(1 - x<sub>n</sub><sup>2</sup>), plot x as a function of n for many different r values to demonstrate chaos. From this, we can plot a range of n values as a function of r to create a bifurcation map. Inaccuracy can be visualised by plotting the bifurcation at r=2 at small and large n values.
 
