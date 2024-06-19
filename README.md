@@ -1,6 +1,6 @@
 # Data
 
-Small-scale projects to generate and analyse datasets, producing meaningful solutions for scientific applications.
+Small-scale projects to demonstrate individual skill in dataset analysis. Will update periodically to improve organisation and code quality.
 
 # Projects
 
