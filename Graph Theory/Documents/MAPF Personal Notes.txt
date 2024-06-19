@@ -1,0 +1,15 @@
+
+Suggested modifications to the algorithm.
+
+1. Create a reservation list and try to avoid conflicts pre-emptively. Process as follows:
+	First agent spawns with optimal path, documenting time and node as a tuple in a reservation table. {agent: [(time, node), (time2, node2)...]}
+	Subsequent agents attempt to find a projected path that avoids all (time, node) pairs in the table.
+	Each new agent adds its (time, node) to the reservation table at first generation.
+
+2. Same as above, but reduce complexity by only implementing it for small time windows, around predicted conflicts. Shortest single-agent path heuristic is commonly implemented for this.
+
+3. Use Independence Detection to divide agents into different groups that are known not to conflict - tentatively those spawned in each time step such that, in our current model, the group size varies from 1-5. Execute A* for each group, then compare groups for conflicts. If a conflict is found, the groups are merged and solved optimally. Repeat this process until no group conflicts remain.
+
+4. Implement the WSCaS algorithm - as the grid is swappable, a solution is guaranteed.
+
+Notes:

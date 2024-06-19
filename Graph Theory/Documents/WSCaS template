@@ -1,0 +1,129 @@
+Algorithm 1: WSCaS Planner Component
+
+Input: G, B_i, g_i
+Use A* to generate P_i
+tr <- 0, action <- stop, s_curr <- b_i, p_next <- s_curr
+alpha <- 0, role <- Pedestrian, bid_helper <- s_curr, t <- 0
+while True do
+	t <- t + 1
+	if action is completed then
+		if role is Samaritan then
+			if s_curr is p_next then
+				role <- Pedestrian
+		action <- get_next_action (role, tr, action)
+		if action is walk then
+			s_curr <- p_next
+		if action is lead_swap then
+			s_curr <- position of swap peer
+		if role is Pedestrian then
+			if action is walk or lead_swap then
+				alpha <- 0
+				if p_next is not g_i then
+					p_next <- s_curr's successor on P_i
+	s_i^t <- get_next_step (action, s_curr)
+	move to s_i^t and meanwhile executes the following:
+		if tr is not 4 then
+			bid_helper <- s_curr
+		tr <- 0
+		repeat
+			if role is Pedestrian and receive a msg_in then
+				count(msg_in)
+		until next time step
+		
+Algorithm 2: WSCaS Boradcasting Component
+
+while true do
+	msg_out <- {s_curr, p_next, alpha, tr, action}
+	transmit msg_out
+	sleep 1 / f_comm
+	
+Algorithm 3: Function count
+
+Input: msg_in
+if msg_in.role is Pedestrian then
+	if msg_in.p_next is s_curr and p_next is not msg_in.s_curr then
+		if alpha > |V| then
+			tr <- 4
+		if tr is 4 and msg_in.tr is 4 then
+			if msg_in.bid_helper :- bid_helper then
+				bid_helper <- msg_in.bid_helper
+			if msg_in.bid_helper is s_curr then
+				role <- Samaritan
+		if msg_in.alpha + 1 > alpha then
+			alpha <- msg_in.alpha + 1
+if tr is 0 then
+	if msg_in.p_next is p_next and s_curr :- msg_in.s_curr then
+		tr <- 1
+	if msg_in.s_curr is p_next then
+		if msg_in.p_next is s_curr or msg_in.s_curr is msg_in.g_i then
+			tr <- 2
+		else
+			tr <- 3
+	if msg_in.action is *_swap and p_next is located in that swap's footprint then
+		tr <- 3
+		
+Algorithm 4: Function get_next_action
+
+Input: role, tr, action
+Output: action
+if agent was recruited by lead_swap at last time step then
+	return follow_swap
+if role is Samaritan then
+	if last action is propose_swap and proposing succeeded then
+		return lead_swap with its next-in-line whose tr is 4
+	else
+		return propose_swap with its next-in-line whose tr is 4
+if tr is 0 then
+	return walk
+if tr is 2 then
+	if last action is propose_swap and proposing succeeded then
+		return lead_swap with the agent blocking the way
+	else
+		return propose_swap with the agent blocking the way
+return stop
+
+Variables
+
+tr: encodes the traffic condition
+values = 0, 1, 2, 3, 4
+
+s_curr: agent's position after finishing its current action
+
+p_next: agent's next waypoint on P
+
+alpha: if agent blocks another's path, its alpha increases by 1 and it transmits to other agents in range - decides how to resolve deadlocks
+
+action: the action that the agent will take
+values = walk, stop, propose_swap, lead_swap, follow_swap
+
+walk: move to p_next
+
+stop: stay at current position for one time step
+
+propose_swap: initiate proposal phase of swap, detecting any nearby swaps and leading to enforcement if none are in progress
+
+lead_swap: signals agents on the current swap footprint to execute follow_swap, initiating a figure-8 swap
+
+role: determines the behaviour of agents to resolve a deadlock
+values: Samaritan, Pedestrian
+
+Samaritan: traverses backwards to resolve the deadlock
+
+Pedestrian: continues on path as normal
+
+bid_helper: an xy coordinate on the graph which assists in deciding the role
+
+Subroutines
+
+Count
+
+Count protocol determines traffic conditions and its own role using alpha - if alpha = 4, it bids to become Samaritan. It does this by comparing its bid_helper to that of any agent it blocks. If its s_curr is equal to a next-in-line's bid_helper, it becomes a Samaritan.
+
+get_next_action
+
+This function selects the action to perform according to the agent's states. lead_swap and follow_swap take >1 time steps to complete so it must check if the last action is completed. Pedestrians execute walk when tr = 0, or stop when it is 1, 3 or 4. tr 2 Pedestrians and all Samaritans execute propose_swap and lead_swap.
+
+get_next_step
+
+This function determines where the agent will be in the next time step. Only walk and lead_swap can change position, so s_curr, p_next and alpha are only updated in these circumstances. Only the Pedestrian updates p_next. Then it uses incoming messages to update its states which are then used during the next get_next_action subroutine.
+

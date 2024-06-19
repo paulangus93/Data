@@ -1,0 +1,24 @@
+Task 1
+
+Modify Simulation.py.
+
+Simulation.py:
+- Write data to a .pkl in the bin folder
+- Ensure .pkl is not committed
+
+Create Visualisation.py in the viz folder.
+
+Visualisation.py:
+- Togglable prints
+- Graphs
+- Timing
+- Delete the .pkl after use
+
+____________________________________________________________________
+
+Task 2
+
+Complete Simulation_dev.py by implementing reservation dictionary.
+
+
+

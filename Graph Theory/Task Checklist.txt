@@ -1,0 +1,33 @@
+Task checklist
+
+1. Implement recalibrate_path function into graph navigation.
+
+Recalibrate_path function acts to recalculate a single entity path. To do this, it creates a copy of the graph, removes all conflicting nodes from that entity's perspective, and recalibrates a new path to be returned. This function should act on individual entities on a case-by-case basis.
+
+_______________________________________________________________________
+2. Prioritise entities to re-route by path length, else choose randomly.
+
+Priority function searches the conflict_nodes dictionary. For each key (node), it takes each entity ID that is vying for it and compares them. ID in state.keys is searched, and the entity to re-calculate is decided as the one with the longest path.
+
+Note that some system states will not allow recalibration of paths, so in those situations we need to ensure the entity can stand by or retreat back along its own path.
+
+_______________________________________________________________________
+3. Re-introduce periodic entity generation.
+
+Refer to lines 157-207 in graphtraversal.py. This function will be adapted to periodically generate entities at the same node every t time steps. Test to ensure all entities reach completion, and try two starting nodes to test whether paths recalibrate accurately.
+
+_______________________________________________________________________
+4. Implement tracking of entities on and off-grid.
+
+For each entity ID that has spawned but whose path length is not yet 0, mark it as ongrid == True (in state dictionary maybe?), and at the end of each time step loop tally all ongrid entities. Initialse offgrid = 0, and for each path that becomes len 0, increase its value by 1.
+_______________________________________________________________________
+5. Incorporate randomness in the starting nodes and begin paths towards the closest of a group of finishing nodes.
+
+Create a list of nodes (subgraph maybe?) which can be designated as spawn points. Assign them a number, and randomly generate said number to generate, at that point, an entity. Use return_all_paths from nxutils.py to return a list of all paths from the the initial node to the list of goal nodes. For each spawned entity, compare the lengths of each generated path and set its path to the shortest one.
+_______________________________________________________________________
+6. Vary graph size and dimensions (try other graph generators).
+
+Search networkx website for various generation parameters and visualise them to get a better understanding of what each one does.
+
+_______________________________________________________________________
+7. Work on visualising the graph.
